@@ -1,0 +1,76 @@
+CREATE TABLE [dbo].[Account](
+	[UserName] [varchar](10) PRIMARY KEY,
+	[Password] [varchar](20) NOT NULL,
+) 
+
+CREATE TABLE [dbo].[Book](
+	[Id] [varchar](10) PRIMARY KEY,
+	[Name] [nvarchar](50) NOT NULL,
+	[Author] [nvarchar](50) NOT NULL,
+	[Quantity] [int] NOT NULL,
+	[KindOfBook] [nvarchar](50) NOT NULL,
+) 
+
+CREATE TABLE [dbo].[LibStaff](
+	[Id] [varchar](10) PRIMARY KEY,
+	[FullName] [nvarchar](50) NOT NULL,
+	[Gender] [nvarchar](10) NOT NULL,
+	[Dob] [date] NOT NULL,
+	[Address] [nvarchar](50) NOT NULL,
+	[License] [varchar](20) NOT NULL,
+	[PhoneNumber] [varchar](20) NOT NULL,
+	[Gmail] [nvarchar](50) NULL,
+	[StartWorkDate] [date] NOT NULL,
+	[Position] [nvarchar](20) NOT NULL,
+	[BasicSalary] [int] NULL,
+	[SalaryBonus] [int] NULL,
+	[Penalty] [int] NULL,
+	[ActualSalary] [int] NULL,
+)
+
+CREATE TABLE [dbo].[Reader](
+	[Id] [varchar](10) PRIMARY KEY,
+	[FullName] [nvarchar](50) NOT NULL,
+	[Gender] [nvarchar](10) NOT NULL,
+	[Dob] [date] NOT NULL,
+	[Address] [nvarchar](50) NOT NULL,
+	[License] [varchar](20) NULL,
+	[PhoneNumber] [varchar](20) NOT NULL,
+	[Gmail] [nvarchar](50) NULL,
+	[KindOfReader] [nvarchar](50) NULL,
+	[StartDate] [date] NOT NULL,
+	[endDate] [date] NOT NULL,
+)
+
+CREATE TABLE [dbo].[RentalInformation](
+	[Id] [varchar](10) PRIMARY KEY,
+	[ReaderId] [varchar](10) NOT NULL,
+	[BookId] [varchar](10) NOT NULL,
+	[LibStaffId] [varchar](10) NOT NULL,
+	[BookBorrowDate] [date] NOT NULL,
+	[BookReturnDate] [date] NOT NULL,
+	[Note] [nvarchar](max) NULL,
+)
+
+ALTER TABLE [dbo].[RentalInformation]  WITH CHECK ADD  CONSTRAINT [fk_ri_book] FOREIGN KEY([BookId])
+REFERENCES [dbo].[Book] ([Id])
+
+ALTER TABLE [dbo].[RentalInformation] CHECK CONSTRAINT [fk_ri_book]
+
+ALTER TABLE [dbo].[RentalInformation]  WITH CHECK ADD  CONSTRAINT [fk_ri_libstaff] FOREIGN KEY([LibStaffId])
+REFERENCES [dbo].[LibStaff] ([Id])
+
+ALTER TABLE [dbo].[RentalInformation] CHECK CONSTRAINT [fk_ri_libstaff]
+
+ALTER TABLE [dbo].[RentalInformation]  WITH CHECK ADD  CONSTRAINT [fk_ri_reader] FOREIGN KEY([ReaderId])
+REFERENCES [dbo].[Reader] ([Id])
+
+ALTER TABLE [dbo].[RentalInformation] CHECK CONSTRAINT [fk_ri_reader]
+
+ALTER TABLE [dbo].[Book]  WITH CHECK ADD CHECK  (([Quantity]>=(0)))
+
+ALTER TABLE [dbo].[Reader]  WITH CHECK ADD  CONSTRAINT [CK__Reader__5DCAEF64] CHECK  (([EndDate]>=[StartDate]))
+
+ALTER TABLE [dbo].[Reader] CHECK CONSTRAINT [CK__Reader__5DCAEF64]
+
+ALTER TABLE [dbo].[RentalInformation]  WITH CHECK ADD CHECK  (([BookBorrowDate]<=[BookReturnDate]))

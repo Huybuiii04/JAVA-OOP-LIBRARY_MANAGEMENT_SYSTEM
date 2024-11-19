@@ -1,0 +1,19 @@
+create or alter view view_get_infor_borrow as (
+	Select 	ri.Id ID,
+			r.Id ReaderID,
+			r.FullName ReaderFullName,
+			r.License ReaderLicense,
+			r.PhoneNumber ReaderPhoneNumber,
+			r.Gmail ReaderGmail,
+			b.Id BookID,
+			b.Name BookName,
+			b.Author BookAuthor,
+			ls.Id LibID,
+			ls.FullName LibFullName,
+			ls.License LibLicense,
+			ls.PhoneNumber LibPhoneNumber,
+			ls.Gmail LibGmail
+	from RentalInformation ri,Reader r,Book b,LibStaff ls
+	where ri.ReaderId=r.Id and ri.BookId=b.Id and ri.LibStaffId=ls.Id 
+	and (ri.BookReturnDate <  GETDATE() OR r.endDate<GETDATE()) 
+)
